@@ -1,0 +1,102 @@
+version: 2.1
+
+executors:
+  java11:
+    docker:
+      - image: circleci/openjdk:11-jdk
+    resource_class: small
+
+references:
+  workspace_root: &workspace_root
+    /tmp/workspace
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *workspace_root
+
+jobs:
+  commit:
+    executor: java11
+    environment:
+      # Customize the JVM maximum heap limit
+      JVM_OPTS: -Xmx3200m
+      TERM: dumb
+    steps:
+      - *attach_workspace
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}-{{ checksum "uaa/build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+      - run:
+          name: Run gradle build
+          command: ./gradlew build
+      - save_cache:
+          paths:
+            - ~/.gradle
+            - ~/metrics-data/.gradle
+            - ~/model/.gradle
+            - ~/samples/.gradle
+            - ~/samples/api/.gradle
+            - ~/samples/app/.gradle
+            - ~/server/.gradle
+            - ~/statsd/.gradle
+            - ~/statsd-lib/.gradle
+            - ~/uaa/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}-{{ checksum "uaa/build.gradle" }}
+      - run:
+          name: Save build artifacts
+          command: |
+            set -exu
+            mkdir -p ~/test-results/junit/
+            find . -type f -regex ".*/build/test-results/.*xml" -exec cp {} ~/test-results/junit/ \;
+            mkdir -p /tmp/workspace/build
+            cp uaa/build/libs/*.war /tmp/workspace/build/
+          when: always
+      - store_test_results:
+          path: ~/test-results
+      - store_artifacts:
+          path: uaa/build/libs
+      - persist_to_workspace:
+          root: *workspace_root
+          paths:
+            - build
+  staging:
+    executor: java11
+    environment:
+      HEROKU_API_KEY: 992cbb1c-d21a-4b4d-bfae-3eddf5692239
+    steps:
+      - *attach_workspace
+      - checkout
+      - run:
+          name: Deploy to Heroku
+          command: |
+            set -exu
+            export ARTIFACT=$(ls /tmp/workspace/build/*.war | grep -v "\-original")
+            export SERVICE=$(basename $ARTIFACT | sed 's/^\(.*\)-[0-9\.]*\.war$/\1/')
+            wget -qO- https://cli-assets.heroku.com/install.sh | sh
+            heroku plugins:install @heroku-cli/plugin-java
+            heroku war:deploy $ARTIFACT --app $SERVICE
+
+  production:
+    machine:
+      enabled: true
+    steps:
+      - run: echo "production job"
+
+workflows:
+  version: 2
+  default:
+    jobs:
+      - commit
+      - staging:
+          requires:
+            - commit
+      - hold:
+          type: approval
+          requires:
+            - staging
+      - production:
+          requires:
+            - hold
+
