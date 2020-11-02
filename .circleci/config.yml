@@ -78,8 +78,9 @@ jobs:
             wget -qO- https://cli-assets.heroku.com/install.sh | sh
             curl -H 'Authorization: token 9f67e46e17ce30d7df713318fcea294aca49a007' -H 'Accept: application/vnd.github.v3.raw' -O -L https://api.github.com/repos/puritana/application-configuration/contents/applications/accounts-management-service/stg/uaa.yml
             ls -ltra
+            pwd
             heroku plugins:install @heroku-cli/plugin-java
-            heroku war:deploy $ARTIFACT --app $SERVICE --includes uaa.yaml
+            heroku war:deploy $ARTIFACT --app $SERVICE --includes ./uaa.yaml
 
   production:
     machine:
