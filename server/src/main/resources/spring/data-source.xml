@@ -10,7 +10,7 @@
 
     <bean id="databaseUrlModifier" class="org.cloudfoundry.identity.uaa.db.DatabaseUrlModifier">
         <constructor-arg name="databaseType" value="#{@platform}"/>
-        <constructor-arg name="url" value="${database.url}"/>
+        <constructor-arg name="url" value="${database.connectionString}"/>
         <property name="connectTimeoutSeconds" value="${database.connecttimeout:10}"/>
     </bean>
 
