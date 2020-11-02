@@ -60,7 +60,7 @@ public class DatabaseUrlModifier {
         return result.toString();
     }
 
-    private static void fixHerokuDatabaseUrl(StringBuilder result) {
+    private void fixHerokuDatabaseUrl(StringBuilder result) {
         if (result.indexOf("postgres") >= 0) {
             result.replace(result.indexOf("postgres"), result.indexOf("postgres") + "postgres".length(), "jdbc:postgresql") ;
         }
