@@ -76,7 +76,7 @@ jobs:
             export ARTIFACT=$(ls /tmp/workspace/build/*.war | grep -v "\-original")
             export SERVICE=$(basename $ARTIFACT | sed 's/^\(.*\)-[0-9\.]*\.war$/\1/')
             wget -qO- https://cli-assets.heroku.com/install.sh | sh
-            curl -H 'Authorization: token 9f67e46e17ce30d7df713318fcea294aca49a007' -H 'Accept: application/vnd.github.v3.raw' -O -L https://api.github.com/repos/puritana/application-configuration/contents/applications/accounts-management-service/stg/uaa.yml
+            curl -H "Authorization: token $GITHUB_PERSONAL_ACCESS_TOKEN" -H "Accept: application/vnd.github.v3.raw" -O -L https://api.github.com/repos/puritana/application-configuration/contents/applications/accounts-management-service/stg/uaa.yml
             mv $ARTIFACT ROOT.war
             heroku plugins:install @heroku-cli/plugin-java
             heroku war:deploy ROOT.war --app $SERVICE --includes /home/circleci/project/uaa.yml
