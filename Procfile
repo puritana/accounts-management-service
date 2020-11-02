@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -jar webapp-runner.jar ${WEBAPP_RUNNER_OPTS} --expand-war --port $PORT ./ROOT.war
+web: java $JAVA_OPTS -jar webapp-runner.jar ${WEBAPP_RUNNER_OPTS} --expand-war-file --expanded-dir-name ROOT --context-xml ./context.xml --path uaa --port $PORT ./ROOT.war
