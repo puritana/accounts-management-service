@@ -65,6 +65,7 @@ jobs:
     executor: java11
     environment:
       HEROKU_API_KEY: 992cbb1c-d21a-4b4d-bfae-3eddf5692239
+      HEROKU_DEBUG: 1
     steps:
       - *attach_workspace
       - checkout
