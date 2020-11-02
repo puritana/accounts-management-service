@@ -79,6 +79,8 @@ jobs:
             curl -H "Authorization: token $GITHUB_PERSONAL_ACCESS_TOKEN" -H "Accept: application/vnd.github.v3.raw" -O -L https://api.github.com/repos/puritana/application-configuration/contents/applications/accounts-management-service/stg/uaa.yml
             curl -H "Authorization: token $GITHUB_PERSONAL_ACCESS_TOKEN" -H "Accept: application/vnd.github.v3.raw" -O -L https://api.github.com/repos/puritana/application-configuration/contents/applications/accounts-management-service/stg/context.xml
             heroku plugins:install @heroku-cli/plugin-java
+            mv $ARTIFACT app.war
+            heroku config:set WAR_DIR="/ROOT"
             heroku war:deploy $ARTIFACT --app $SERVICE --includes /home/circleci/project/uaa.yml:/home/circleci/project/context.xml
 
   production:
