@@ -81,7 +81,7 @@ jobs:
             heroku plugins:install @heroku-cli/plugin-java
             mv $ARTIFACT app.war
             heroku config:set WAR_DIR="/ROOT"
-            heroku war:deploy $ARTIFACT --app $SERVICE --includes /home/circleci/project/uaa.yml:/home/circleci/project/context.xml
+            heroku war:deploy app.war --app $SERVICE --includes /home/circleci/project/uaa.yml:/home/circleci/project/context.xml
 
   production:
     machine:
