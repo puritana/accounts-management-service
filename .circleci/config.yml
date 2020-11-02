@@ -76,33 +76,21 @@ jobs:
             export ARTIFACT=$(ls /tmp/workspace/build/*.war | grep -v "\-original")
             export SERVICE=$(basename $ARTIFACT | sed 's/^\(.*\)-[0-9\.]*\.war$/\1/')
             wget -qO- https://cli-assets.heroku.com/install.sh | sh
-            curl -H "Authorization: token $GITHUB_PERSONAL_ACCESS_TOKEN" -H "Accept: application/vnd.github.v3.raw" -O -L https://api.github.com/repos/puritana/application-configuration/contents/applications/accounts-management-service/stg/uaa.yml
-            curl -H "Authorization: token $GITHUB_PERSONAL_ACCESS_TOKEN" -H "Accept: application/vnd.github.v3.raw" -O -L https://api.github.com/repos/puritana/application-configuration/contents/applications/accounts-management-service/stg/context.xml
-            curl -H "Authorization: token $GITHUB_PERSONAL_ACCESS_TOKEN" -H "Accept: application/vnd.github.v3.raw" -O -L https://api.github.com/repos/puritana/application-configuration/contents/applications/accounts-management-service/stg/log4j2.properties
+            curl -H "Authorization: token $GITHUB_PERSONAL_ACCESS_TOKEN" -H "Accept: application/vnd.github.v3.raw" -O -L https://api.github.com/repos/puritana/application-configuration/contents/src/main/resources/applications/accounts-management-service/stg/uaa.yml
+            curl -H "Authorization: token $GITHUB_PERSONAL_ACCESS_TOKEN" -H "Accept: application/vnd.github.v3.raw" -O -L https://api.github.com/repos/puritana/application-configuration/contents/src/main/resources/applications/accounts-management-service/stg/context.xml
+            curl -H "Authorization: token $GITHUB_PERSONAL_ACCESS_TOKEN" -H "Accept: application/vnd.github.v3.raw" -O -L https://api.github.com/repos/puritana/application-configuration/contents/src/main/resources/applications/accounts-management-service/stg/log4j2.properties
             heroku plugins:install @heroku-cli/plugin-java
             heroku config:set WEBAPP_RUNNER_OPTS="--uri-encoding UTF-8 --expand-war-file true --expanded-dir-name ROOT --context-xml ./context.xml --path /uaa" --app $SERVICE
             heroku config:set UAA_CONFIG_PATH="/app" --app $SERVICE
             heroku war:deploy $ARTIFACT --app $SERVICE --includes /home/circleci/project/uaa.yml:/home/circleci/project/context.xml:/home/circleci/project/log4j2.properties
 
-  production:
-    machine:
-      enabled: true
-    steps:
-      - run: echo "production job"
-
 workflows:
   version: 2
   default:
     jobs:
-      - commit
+      - commit:
+          context: Puritana
       - staging:
+          context: Puritana
           requires:
             - commit
-      - hold:
-          type: approval
-          requires:
-            - staging
-      - production:
-          requires:
-            - hold
-

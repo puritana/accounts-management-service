@@ -12,7 +12,11 @@ buildscript {
             url("https://repo.spring.io/plugins-release")
         }
         maven {
-            url 'https://mymavenrepo.com/repo/idOPJhSN5m7HecjD9MQB/'
+            url 'https://zonumi.jfrog.io/artifactory/puritana-releases/'
+            credentials {
+                username = System.getenv()['ARTIFACTORY_USERNAME']
+                password = System.getenv()['ARTIFACTORY_PASSWORD']
+            }
         }
     }
 
