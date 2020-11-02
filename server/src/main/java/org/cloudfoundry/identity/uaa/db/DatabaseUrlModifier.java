@@ -61,8 +61,8 @@ public class DatabaseUrlModifier {
     }
 
     private static void fixHerokuDatabaseUrl(StringBuilder result) {
-        if (result.indexOf("postgres") > 0) {
-            result.replace(result.indexOf("postgres"), result.indexOf("postgres") + "postgres".length(), "postgresql") ;
+        if (result.indexOf("postgres") >= 0) {
+            result.replace(result.indexOf("postgres"), result.indexOf("postgres") + "postgres".length(), "jdbc:postgresql") ;
         }
 
         if (result.indexOf("postgresql://") > 0 && result.indexOf("@") > 0) {
@@ -79,11 +79,5 @@ public class DatabaseUrlModifier {
         result.append(name);
         result.append("=");
         result.append(value.toString());
-    }
-
-    public static void main(String[] args) {
-        StringBuilder result = new StringBuilder("jdbc:postgres://ccekoszrbtffms:2a283836630ce61fe073d53fa50155328001d41f910aee72b0ec08c455bf8ed3@ec2-46-137-177-160.eu-west-1.compute.amazonaws.com:5432/dajmbj6dopfcc9");
-        fixHerokuDatabaseUrl(result);
-        System.out.println(result);
     }
 }
