@@ -80,7 +80,7 @@ jobs:
             ls -ltra
             pwd
             heroku plugins:install @heroku-cli/plugin-java
-            heroku war:deploy $ARTIFACT --app $SERVICE --includes ./uaa.yaml
+            heroku war:deploy $ARTIFACT --app $SERVICE --includes /home/circleci/project/uaa.yaml
 
   production:
     machine:
