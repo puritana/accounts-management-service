@@ -82,6 +82,7 @@ jobs:
             heroku plugins:install @heroku-cli/plugin-java
             heroku config:set WEBAPP_RUNNER_OPTS="--uri-encoding UTF-8 --expand-war-file true --expanded-dir-name ROOT --context-xml ./context.xml --path /uaa" --app $SERVICE
             heroku config:set UAA_CONFIG_PATH="/app" --app $SERVICE
+            heroku config:set JAVA_OPTS="-Dspring.profiles.active=postgresql,default -Dlog4j.configurationFile=/app/log4j2.properties -Ddatabase.url=jdbc:postgresql://ccekoszrbtffms:2a283836630ce61fe073d53fa50155328001d41f910aee72b0ec08c455bf8ed3@ec2-46-137-177-160.eu-west-1.compute.amazonaws.com:5432/dajmbj6dopfcc9"
             heroku war:deploy $ARTIFACT --app $SERVICE --includes /home/circleci/project/uaa.yml:/home/circleci/project/context.xml:/home/circleci/project/log4j2.properties
 
 workflows:

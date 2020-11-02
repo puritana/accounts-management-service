@@ -1,1 +1,1 @@
-web: java -Dspring.profiles.active=postgresql,default -Dlog4j.configurationFile=/app/log4j2.properties -Ddatabase.url=jdbc:postgresql://ccekoszrbtffms:2a283836630ce61fe073d53fa50155328001d41f910aee72b0ec08c455bf8ed3@ec2-46-137-177-160.eu-west-1.compute.amazonaws.com:5432/dajmbj6dopfcc9 $JAVA_OPTS -jar webapp-runner.jar ${WEBAPP_RUNNER_OPTS} --port $PORT *.war
+web: java $JAVA_OPTS -jar webapp-runner.jar ${WEBAPP_RUNNER_OPTS} --port $PORT *.war
