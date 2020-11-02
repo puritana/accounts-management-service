@@ -81,7 +81,7 @@ jobs:
             curl -H "Authorization: token $GITHUB_PERSONAL_ACCESS_TOKEN" -H "Accept: application/vnd.github.v3.raw" -O -L https://api.github.com/repos/puritana/application-configuration/contents/src/main/resources/applications/accounts-management-service/stg/log4j2.properties
             heroku plugins:install @heroku-cli/plugin-java
             heroku config:set WEBAPP_RUNNER_OPTS="--uri-encoding UTF-8 --expand-war-file true --expanded-dir-name ROOT --context-xml ./context.xml --path /uaa" --app $SERVICE
-            heroku config:set UAA_CONFIG_YAML=$(cat /home/circleci/project/uaa.yml) --app $SERVICE
+            heroku config:set UAA_CONFIG_YAML="$(cat /home/circleci/project/uaa.yml)" --app $SERVICE
             heroku config:set JAVA_OPTS="-Dspring.profiles.active=default -Dlog4j.configurationFile=/app/log4j2.properties" --app $SERVICE
             heroku war:deploy $ARTIFACT --app $SERVICE --includes /home/circleci/project/context.xml:/home/circleci/project/log4j2.properties
 
