@@ -74,7 +74,7 @@ jobs:
           command: |
             set -exu
             export ARTIFACT=$(ls /tmp/workspace/build/*.war | grep -v "\-original")
-            export SERVICE=$(basename $ARTIFACT | sed 's/^\(.*\)-[0-9\.]*\.war$/\1/')
+            export SERVICE=stg-uaa
             wget -qO- https://cli-assets.heroku.com/install.sh | sh
             curl -H "Authorization: token $GITHUB_PERSONAL_ACCESS_TOKEN" -H "Accept: application/vnd.github.v3.raw" -O -L https://api.github.com/repos/puritana/application-configuration/contents/src/main/resources/applications/accounts-management-service/stg/uaa.yml
             curl -H "Authorization: token $GITHUB_PERSONAL_ACCESS_TOKEN" -H "Accept: application/vnd.github.v3.raw" -O -L https://api.github.com/repos/puritana/application-configuration/contents/src/main/resources/applications/accounts-management-service/stg/context.xml
