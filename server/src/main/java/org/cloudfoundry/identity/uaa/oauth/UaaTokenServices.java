@@ -152,7 +152,7 @@ public class UaaTokenServices implements AuthorizationServerTokenServices, Resou
     private TokenPolicy tokenPolicy;
     private RevocableTokenProvisioning tokenProvisioning;
     private Set<String> excludedClaims;
-    private UaaTokenEnhancer uaaTokenEnhancer = null;
+    private UaaTokenEnhancer uaaTokenEnhancer = new UaaProfileTokenEnhancer();
     private IdTokenCreator idTokenCreator;
     private RefreshTokenCreator refreshTokenCreator;
     private TokenEndpointBuilder tokenEndpointBuilder;
