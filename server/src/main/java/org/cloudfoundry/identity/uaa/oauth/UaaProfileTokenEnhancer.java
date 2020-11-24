@@ -14,26 +14,30 @@ public class UaaProfileTokenEnhancer implements UaaTokenEnhancer {
 
     @Override
     public Map<String, String> getExternalAttributes(OAuth2Authentication authentication) {
-        UaaAuthentication oldAuthentication = (UaaAuthentication) SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("authentication = " + authentication);
 
-        System.out.println(oldAuthentication);
-        System.out.println(oldAuthentication.getPrincipal());
-        System.out.println(oldAuthentication.getPrincipal().getId());
+//        UaaAuthentication oldAuthentication = (UaaAuthentication) SecurityContextHolder.getContext().getAuthentication();
+//
+//        System.out.println(oldAuthentication);
+//        System.out.println(oldAuthentication.getPrincipal());
+//        System.out.println(oldAuthentication.getPrincipal().getId());
 
         Map<String, String> externalAttributes = new HashMap<>();
 
-        externalAttributes.put(SUB, oldAuthentication.getPrincipal().getId());
+//        externalAttributes.put(SUB, oldAuthentication.getPrincipal().getId());
 
         return externalAttributes;
     }
 
     @Override
     public Map<String, Object> enhance(Map<String, Object> claims, OAuth2Authentication authentication) {
+        System.out.println("claims = " + claims + ", authentication = " + authentication);
+
         Map<String, Object> profile = new HashMap<>();
 
-        profile.put(PROFILE, getExternalAttributes(authentication));
-
-        System.out.println("Returning " + profile);
+//        profile.put(PROFILE, getExternalAttributes(authentication));
+//
+//        System.out.println("Returning " + profile);
 
         return profile;
     }
