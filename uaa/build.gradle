@@ -2,6 +2,7 @@ Project identityServer = parent.subprojects.find { it.name.equals("cloudfoundry-
 
 apply(plugin: "war")
 apply(plugin: "org.asciidoctor.convert")
+apply(plugin: "com.github.node-gradle.node")
 
 processResources {
     //maven replaces project.artifactId in the log4j.properties file
@@ -154,4 +155,29 @@ integrationTest {
 war {
     //workaround for maven <scope>optional</scope>
     rootSpec.exclude("**/spring-security-oauth-*.jar")
+    //add unify
+    from('build/tmp') {
+        include 'css/**/*'
+        include 'media/**/*'
+        include 'index.js'
+        into 'resources/unify'
+    }
 }
+
+
+node {
+    version = '12.9.1'
+    npmVersion = '6.10.3'
+    download = true
+}
+
+task npmBuild(type: NpmTask) {
+    args = ["run", "build"]
+}
+
+afterEvaluate {
+    npmBuild.dependsOn npmInstall
+    npmBuild.dependsOn processResources
+}
+
+classes.finalizedBy npmBuild

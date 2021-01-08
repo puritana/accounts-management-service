@@ -1,82 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" dir="ltr" lang="en"
-      th:with="assetBaseUrl=${@environment.getProperty('assetBaseUrl','/resources/oss')},
-                isUaa=${T(org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder).isUaa()},
-                zoneName=${T(org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder).get().getName()},
-                branding=${T(org.cloudfoundry.identity.uaa.zone.MergedZoneBrandingInformation).resolveBranding()},
-                companyName=${branding.getCompanyName() ?: 'Cloud Foundry'},
-                copyrightCompanyName=${branding.getCompanyName() ?: 'CloudFoundry.org Foundation, Inc. '},
-                copyrightFallback=${'Copyright &#169; ' + copyrightCompanyName + ' ' + #dates.year(#dates.createNow()) + '. All Rights Reserved.'},
-                copyright=${branding.getFooterLegalText() ?: copyrightFallback},
-                brandingLogo=${branding.getProductLogo()},
-                fallbackLogo=${isUaa ? assetBaseUrl+'/images/product-logo.png' : null},
-                logo=${brandingLogo != null ? 'data:image/png;base64,'+#strings.replace(brandingLogo,T(java.lang.System).getProperty('line.separator'),'') : fallbackLogo}" >
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" dir="ltr" lang="en">
 <head>
-    <title th:text="${isUaa ? companyName : zoneName}" th:inline="text"></title>
-    <link href='/resources/oss/images/square-logo.png' th:with="icon=${branding.getSquareLogo()}" th:href="@{${icon != null ? 'data:image/png;base64,'+icon : (assetBaseUrl + '/images/square-logo.png')}}" rel='shortcut icon' />
-    <meta charset='utf-8' />
-    <meta name='author' th:content="|${companyName}|" />
-    <meta name='copyright' th:content="|${copyright}|" />
-    <meta name='robots' content='all' />
-    <meta name='Description' content=""/>
-    <meta name='keywords' content=""/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <link href="/vendor/font-awesome/css/font-awesome.min.css" th:href="@{/vendor/font-awesome/css/font-awesome.min.css}" rel="stylesheet"/>
-    <link href="/resources/oss/stylesheets/application.css" th:href="@{${assetBaseUrl}+'/stylesheets/application.css'}" rel="stylesheet"/>
-    <style th:unless="${#strings.isEmpty(logo)}" th:text="'.header-image {' + (|background-image: url(@{${logo}});|) + '}'">
-        .header-image {
-            background-image: url(/resources/oss/images/product-logo.png);
-        }
-    </style>
+    <title>Puritana Online</title>
+
+    <!-- Required Meta Tags Always Come First -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!-- Favicon -->
+    <link rel="shortcut icon" href="//gcw.stg.puritana.pt/gcw/favicon.ico">
+    <!-- Google Fonts -->
+    <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Open+Sans%3A400%2C300%2C500%2C600%2C700%7CPlayfair+Display%7CRoboto%7CRaleway%7CSpectral%7CRubik">
+
+    <link href="/resources/unify/css/index.css" th:href="@{/resources/unify/css/index.css}" rel="stylesheet"/>
 </head>
 <body>
-<div class="content">
-    <div class="header">
-        <div layout:fragment="page-nav"></div>
-        <div class="header-image"></div>
-    </div>
+<main>
+    <!-- Header -->
+    <header id="js-header" class="u-header u-header--static">
+        <div class="u-header__section u-header__section--light g-bg-white g-transition-0_3 g-py-10">
+            <nav class="js-mega-menu navbar navbar-expand-lg hs-menu-initialized hs-menu-horizontal">
+                <div class="container">
+                    <!-- Logo -->
+                    <a th:href="@{www.stg.puritana.pt}" class="navbar-brand d-flex">
+                        <img class='logo' th:src="${'//www.stg.puritana.pt/wp-content/uploads/2021/01/puritana-logo-1.png'}" alt="Logo">
+                    </a>
+                    <!-- End Logo -->
+
+                </div>
+            </nav>
+        </div>
+    </header>
+    <!-- End Header -->
 
     <div layout:fragment="page-content"></div>
-    <div class="footer-spacer"></div>
-</div>
-<div class="footer">
-    <div class="copyright"
-         th:with="links=${branding.getFooterLinks()}"
-         th:inline="text"
-         th:title="|Version: ${@buildInfo.version}, Commit: ${@buildInfo.commitId}, Timestamp: ${@buildInfo.timestamp}, UAA: ${@buildInfo.uaaUrl}|">
-         [[${copyright}]]
-         <th:block th:each="link,iter : ${links}"><th:block th:if="${!iter.first}"> &mdash;</th:block> <a href="/" th:href="${link.value}">[[${link.key}]]</a></th:block>
-        <div th:if="${#authentication instanceof T(org.cloudfoundry.identity.uaa.authentication.UaaAuthentication)} ">
-            <div th:if="${#authentication.lastLoginSuccessTime} != null">
-                Last login <span id="last_login_time"></span>
-                <script type="text/javascript">
-                    document.getElementById("last_login_time").innerHTML = new Date([[${#authentication.lastLoginSuccessTime}]]).toLocaleString();
-                </script>
+
+    <!-- Copyright Footer -->
+    <footer class="g-bg-gray-dark-v1 g-color-white-opacity-0_8 g-py-20">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 text-center text-md-left g-mb-10 g-mb-0--md">
+                    <div class="d-lg-flex">
+                        <small class="d-block g-font-size-default g-mr-10 g-mb-10 g-mb-0--md">2021 &copy; Puritana</small>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-</div>
-
-<th:block th:with="code=${@environment.getProperty('analytics.code')},domain=${@environment.getProperty('analytics.domain')}">
-    <th:block th:if="${code} and ${domain}">
-        <script>
-            (function(i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r;
-                i[r] = i[r] || function() {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
-                a = s.createElement(o), m = s.getElementsByTagName(o)[0];
-                a.async = 1;
-                a.src = g;
-                m.parentNode.insertBefore(a, m)
-            })(window, document, 'script',
-                    '//www.google-analytics.com/analytics.js', 'ga');
-        </script>
-        <script th:utext="|ga('create', '${code}','${domain}');|"></script>
-        <script>
-            ga('send', 'pageview');
-        </script>
-    </th:block>
-</th:block>
+    </footer>
+    <!-- End Copyright Footer -->
+</main>
 </body>
 </html>

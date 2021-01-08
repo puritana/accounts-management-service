@@ -42,3 +42,5 @@ uaa/slateCustomizations/source/versionfile
 
 ci/dockerfile/Dockerfile
 logs/**
+
+**/node_modules

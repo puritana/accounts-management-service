@@ -3,72 +3,109 @@
 <head>
     <meta http-equiv="refresh" th:content="${@loginCookieCsrfRepository.getCookieMaxAge()}" />
 </head>
-<div class="island" layout:fragment="page-content">
-    <h1 th:text="${T(org.cloudfoundry.identity.uaa.zone.IdentityZoneHolder).uaa ? 'Welcome!':'Welcome to '+zone_name+'!'}">Welcome!</h1>
-    <div class="island-content">
 
-        <div th:if="${error}"
-             class="alert alert-error">
-            <p th:text="${#messages.msgOrNull('login.' + error) ?: 'Error!'}"></p>
+<body>
+    <section layout:fragment="page-content" class="g-height-100vh dzsparallaxer auto-init height-is-based-on-content use-loading mode-scroll loaded dzsprx-readyall" data-options="{direction: 'reverse', settings_mode_oneelement_max_offset: '150'}">
+        <div class="divimage dzsparallaxer--target w-100 u-bg-overlay g-bg-size-cover g-bg-bluegray-opacity-0_3--after"
+             style="height: 140%; background-image:url(//www.stg.puritana.pt/wp-content/uploads/2021/01/tree-nature-forest-branch-sunlight-leaf.jpg)">
         </div>
 
-        <div th:unless="${error}"
-             th:if="${param.error}"
-             class="alert alert-error">
-            <p th:text="${#messages.msgOrNull('login.' + param.error[0]) ?: 'Error!'}"></p>
-        </div>
+        <div class="row no-gutters">
+            <div class="col-lg-6"></div>
+            <div class="col-lg-6">
+                <div class="g-pa-50 g-mx-70--xl">
+                    <form class='g-py-15' th:action="@{/login.do}" method="post" novalidate="novalidate" accept-charset="UTF-8">
+                        <div th:if="${error}" class="alert alert-dismissible fade show g-bg-red g-color-white rounded-0" role="alert">
+                            <button type="button" class="close u-alert-close--light" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <div class="media">
+                                <span class="d-flex g-mr-10 g-mt-5">
+                                    <i class="icon-ban g-font-size-25"></i>
+                                </span>
+                                <span class="media-body align-self-center" th:text="${#messages.msgOrNull('login.' + error) ?: 'Error!'}"></span>
+                            </div>
+                        </div>
 
-        <div th:if="${param.success}" class="alert alert-success">
-            <p th:text="${#messages.msgOrNull('login.' + param.success[0]) ?: 'Success!'}"></p>
-        </div>
+                        <div th:unless="${error}" th:if="${param.error}" class="alert alert-dismissible fade show g-bg-red g-color-white rounded-0" role="alert">
+                            <button type="button" class="close u-alert-close--light" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <div class="media">
+                                <span class="d-flex g-mr-10 g-mt-5">
+                                    <i class="icon-ban g-font-size-25"></i>
+                                </span>
+                                <span class="media-body align-self-center" th:text="${#messages.msgOrNull('login.' + param.error[0]) ?: 'Error!'}"></span>
+                            </div>
+                        </div>
 
-        <th:block th:if="${fieldUsernameShow}">
-        <form th:action="@{/login.do}" method="post" novalidate="novalidate" accept-charset="UTF-8">
-            <input th:each="prompt,iter : ${prompts}"
-                   th:name="${prompt.key}"
-                   th:type="${prompt.value[0]}"
-                   th:placeholder="${prompt.value[1]}"
-                   th:attr="autocomplete=${(prompt.value[0] == 'password') ? 'off' : null}"
-                   class="form-control"/>
-            <input type="submit" value="Sign in" class="island-button"/>
-            <input th:if="${session.SPRING_SECURITY_SAVED_REQUEST}"
-                   th:unless="${form_redirect_uri}"
-                   th:name="form_redirect_uri"
-                   th:type="hidden"
-                   th:value="${session.SPRING_SECURITY_SAVED_REQUEST.redirectUrl}"/>
-            <input th:if="${form_redirect_uri}"
-                   th:name="form_redirect_uri"
-                   th:type="hidden"
-                   th:value="${form_redirect_uri}"/>
-            <input th:if="${param.login_hint}"
-                   th:unless="${login_hint}"
-                   th:name="login_hint"
-                   th:type="hidden"
-                   th:value="${param.login_hint}"/>
-            <input th:if="${login_hint}"
-                   th:name="login_hint"
-                   th:type="hidden"
-                   th:value="${login_hint}"/>
-        </form>
-        </th:block>
-        <div class="saml-login">
-            <p th:if="${showLoginLinks==true and fieldUsernameShow}">or sign in with: </p>
-            <div th:each="idp : ${idpDefinitions}" th:if="${idp.showSamlLink}">
-                <a href="" th:href="@{saml/discovery(returnIDParam=idp,entityID=${entityID},idp=${idp.idpEntityAlias},isPassive=true)}" th:text="${idp.linkText}" class="saml-login-link">Use your corporate credentials</a>
-            </div>
-            <div th:each="oauthLink : ${oauthLinks}" >
-                <div>
-                    <a href="" th:href="${oauthLink.key}" th:text="${oauthLink.value}" class="saml-login-link">Use your corporate credentials</a>
+                        <div th:if="${param.success}" class="alert alert-dismissible fade show g-bg-teal g-color-white rounded-0" role="alert">
+                            <button type="button" class="close u-alert-close--light" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                            <div class="media">
+                                <span class="d-flex g-mr-10 g-mt-5">
+                                    <i class="icon-ban g-font-size-25"></i>
+                                </span>
+                                <span class="media-body align-self-center" th:text="${#messages.msgOrNull('login.' + param.success[0]) ?: 'Success!'}"></span>
+                            </div>
+                        </div>
+
+                        <h2 class='h3 g-color-white mb-4'>Iniciar sessão</h2>
+
+                        <div class='mb-4' th:each="prompt,iter : ${prompts}">
+                            <div class='input-group g-brd-primary--focus'>
+                                <div class='input-group-prepend'>
+                                    <span class='input-group-text g-width-45 g-brd-right-none g-bg-white g-color-primary'>
+                                        <i class='icon-communication-062 u-line-icon-pro g-pos-rel g-top-2'></i></span>
+                                </div>
+
+                                <input th:name="${prompt.key}"
+                                       th:type="${prompt.value[0]}"
+                                       th:placeholder="${prompt.value[1]}"
+                                       th:attr="autocomplete=${(prompt.value[0] == 'password') ? 'off' : null}"
+                                       class='form-control g-color-black g-brd-left-none g-bg-white g-pl-0 g-pr-15 g-py-15' />
+                            </div>
+                        </div>
+
+                        <input th:if="${session.SPRING_SECURITY_SAVED_REQUEST}"
+                               th:unless="${form_redirect_uri}"
+                               th:name="form_redirect_uri"
+                               th:type="hidden"
+                               th:value="${session.SPRING_SECURITY_SAVED_REQUEST.redirectUrl}"/>
+                        <input th:if="${form_redirect_uri}"
+                               th:name="form_redirect_uri"
+                               th:type="hidden"
+                               th:value="${form_redirect_uri}"/>
+                        <input th:if="${param.login_hint}"
+                               th:unless="${login_hint}"
+                               th:name="login_hint"
+                               th:type="hidden"
+                               th:value="${param.login_hint}"/>
+                        <input th:if="${login_hint}"
+                               th:name="login_hint"
+                               th:type="hidden"
+                               th:value="${login_hint}"/>
+
+                        <div class='row justify-content-between mb-4'>
+                            <div class='col align-self-center text-right g-nowrap'>
+                                <a class='g-color-white g-color-primary--hover' th:href='@{//www.stg.puritana.pt/forgot-password}'>Esqueceu-se da palavra passe?</a>
+                            </div>
+                        </div>
+
+                        <div class='g-mb-50'>
+                            <div class='g-mb-50'>
+                                <button class='btn btn-md btn-block u-btn-primary rounded text-uppercase g-py-13' type='submit'>Entrar</button>
+                            </div>
+                        </div>
+
+                        <p class='g-color-white g-font-size-14 text-center mb-0 g-font-weight-600'>Ainda não tem conta?
+                            <a class='g-color-white g-color-primary--hover g-cursor-pointer' th:href='@{//www.stg.puritana.pt/register}'>Criar conta</a>
+                        </p>
+                    </form>
                 </div>
             </div>
         </div>
-        <th:block th:if="${linkCreateAccountShow}">
-        <span class="left">
-            <a th:unless="${#strings.isEmpty(links['createAccountLink'])}" href="/create_account" th:href="@{${links['createAccountLink']}}" class="link-lowlight">Create account</a>
-        </span><span class="right" th:unless="${#strings.isEmpty(links['forgotPasswordLink'])}">
-            <a href="/forgot_password" th:href="@{${links['forgotPasswordLink']}}" class="link-lowlight">Reset password</a>
-        </span>
-        </th:block>
-    </div>
-</div>
+    </section>
+</body>
 </html>
